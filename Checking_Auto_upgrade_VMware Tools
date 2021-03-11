@@ -1,0 +1,30 @@
+### This is the page, where you can see how to Check and upgrade VMware Tools before each power on. 
+
+Typically, this option you can see it in the EDIT settings of a Virtual Machine.
+
+Go to a "TEST" vm >> Right Click and Select Edit settings >> Click on VM Options (Next to Virtual Hardware option)
+The option should be under "VMware Tools" >> Tools Upgrade. By default the Tools Upgrade option should be disabled (unchecked)
+If it's checked, we need to be disabled it whenever you want to set it as manual upgrade instead "Auto Upgrade" on each power cycle.
+
+To set it as Manual or disable option of the Tools Upgrade on a single or bunch of vm's, we can use PowerCli Script,
+
+##################################################################################
+
+$vCenter = Connect-VIServer lab.example.com -User abc -Password xyz
+Write-Host "$vCenter  is successfully connected" -f Cyan -B Black
+Write-Host "MANUALLY set VMware Tools upgrade on vm's" -f Cyan -BackgroundColor Black
+$virtualmacs =  Get-Content C:\Users\thangadurai\Music\vm.txt
+$virtualmacs
+Start-Sleep -Seconds 1
+$vmw = Get-VM test1,test2 | Get-View   ## test1, test2 are the vm names. Instead passing directly on the Get-VM, you can use $variable as well.
+Start-Sleep -Seconds 1
+$vmconfigSpec = New-Object VMware.Vim.VirtualMachineConfigSpec
+$vmConfigSpec.Tools = New-Object VMware.Vim.ToolsConfigInfo
+$vmConfigSpec.Tools.ToolsUpgradePolicy = "manual"
+$vmw.ReconfigVM($vmConfigSpec)
+Write-Host "Disable VMware Tools AUTO upgrade on vm $virtualmacs" -f Cyan -b Black
+
+Note: If it's one or two vm's we can directly feed the vm names in the "Get-VM" cmdlet. If it's a bunch of vm's like more than 100 vm's, you need to a user a $variable file, in which
+you need to keep all the vm names. Input file should be a text or .csv as well. 
+
+Also, for loop we need to use to iterate the process.
