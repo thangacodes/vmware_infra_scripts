@@ -1,0 +1,38 @@
+## This page is to explain you, how to find out a service in Windows Client /Server Operating Systems. It will find out any software installed on the OS. We typically check in
+Add/Remove program panel (appwiz.cpl) This is also a way to find out!
+####################################################################################################
+
+Write-Host "Scope is to Check a specific windows service running or not" -f Red -b Yellow
+
+$servicename = Read-Host "Enter the service, you wanna check on windows OS"
+
+$servicename  ## To verify, whether we given a service name right or wrong
+
+Start-Sleep -Seconds 2  # just '2' seconds break or sleep
+
+Write-Host "The actual Script starts here" -f Red -b Yellow
+
+## Here we are using conditional statements {if, elseif, else} to check the conditions are True or False.
+
+if (Get-Service $ServiceName -ErrorAction SilentlyContinue)
+	{
+		if ((Get-Service -Name $ServiceName).Status -eq 'Running')
+			{
+				$ServiceStatus = (Get-Service -Name $ServiceName).Status
+				Write-Host $ServiceName "-" $ServiceStatus
+			}
+		elseif ((Get-Service -Name $ServiceName).Status -eq 'Stopped')
+			{
+				$ServiceStatus = (Get-Service -Name $ServiceName).Status
+				Write-Host $ServiceName "-" $ServiceStatus
+			}	
+		else
+			{
+				$ServiceStatus = (Get-Service -Name $ServiceName).Status
+				Write-Host $ServiceName "-" $ServiceStatus
+			}
+	}
+else
+	{
+		Write-Host "$ServiceName not found"
+	}
