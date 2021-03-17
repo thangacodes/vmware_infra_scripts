@@ -1,0 +1,13 @@
+### Script to pull out the bulk domain users email id in ADDS
+
+# https://4sysops.com/wiki/how-to-install-the-powershell-active-directory-module/
+
+Logic behind the script is,
+1) Stored all the user names in a text file in local systems or jump box.
+2) calling the input file using 'Get-content'
+3) Using for each loop command, checking all the users mail id.
+4) Prior to execute the script, we should be checked and installed ADDS module.
+
+Write-Host "Fetching domain users mail id from ADDS attributes" -f Red -B Yellow
+Get-Content C:\Users\thangadurai\Desktop\USERNAME.txt | forEach { (Get-ADUser -filter {DisplayName -eq $_} -properties EmailAddress).EmailAddress} | out-file -Filepath 'C:\temp\TESTUSER.csv'
+Write-Host " The output file is stored in C:\temp\TESTUSER.csv" -f Red -B Yellow
